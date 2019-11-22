@@ -66,7 +66,7 @@ Hesapla1:                               ' Ham deðerden Santigrat derece hesabý
     FLOAT = ISI//10
     ISI=ISI/10
     derece=ISI
-    dereceon=Float
+    dereceon=Float 
 return
 
 goster:
