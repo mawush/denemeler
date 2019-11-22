@@ -1,0 +1,59 @@
+'****************************************************************
+'*  Name    : UNTITLED.BAS                                      *
+'*  Author  : [select VIEW...EDITOR OPTIONS]                    *
+'*  Notice  : Copyright (c) 2019 [select VIEW...EDITOR OPTIONS] *
+'*          : All Rights Reserved                               *
+'*  Date    : 22.11.2019                                        *
+'*  Version : 1.0                                               *
+'*  Notes   :                                                   *
+'*          :                                                   *
+'****************************************************************
+ 
+ 
+ 
+ ;**************      Genel Konfügirasyon  ********************
+ @ __config _INTRC_OSC_NOCLKOUT & _WDT_ON & _MCLRE_ON & _LVP_OFF & _CP_OFF
+ Include "modedefs.bas"
+ 
+    cs  var portb.1
+    clk var portb.2
+    ver var portb.3
+    set var portb.0
+    up  var portb.4
+    down var portb.5
+    Comm_Pin1   VAR	Portb.6
+ 
+ 
+ 
+ 
+ ;*************************************************************
+ 
+ 
+ 
+ 
+ gosub init
+
+
+
+
+init:
+    low cs
+    pauseus 100
+    SHIFTOUT veri, clk,1, [$0c,$01]   ;displayler açýk
+    PULSOUT cs,2
+    pauseus 100
+    SHIFTOUT veri, clk,1, [$09,$ff]   ;display decoder modu ( sadece sayý göndermek yeterli kendi yazar)
+    PULSOUT cs,2 
+    pauseus 100
+    SHIFTOUT veri, clk,1, [$0a,$09]   ;display tarama/parlaklýk
+    PULSOUT cs,2 
+    pauseus 100
+    SHIFTOUT veri, clk,1, [$0b,$05] ;display sayýsý
+    PULSOUT cs,2
+    pauseus 100
+    SHIFTOUT veri, clk,1, [$0f,$00]   ;display test modu 0 kapalý 1 açýk
+    PULSOUT cs,2 
+    pauseus 100
+    high cs
+return
+end 
