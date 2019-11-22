@@ -14,18 +14,26 @@
  ;**************      Genel Konfügirasyon  ********************
  @ __config _INTRC_OSC_NOCLKOUT & _WDT_ON & _MCLRE_ON & _LVP_OFF & _CP_OFF
  Include "modedefs.bas"
- 
-    cs  var portb.1
-    clk var portb.2
-    ver var portb.3
-    set var portb.0
-    up  var portb.4
-    down var portb.5
+    trisa=      %00000000
+    trisb=      %00111001
+    cs          var portb.1
+    clk         var portb.2
+    ver         var portb.3
+    set         var portb.0
+    up          var portb.4
+    down        var portb.5
     Comm_Pin1   VAR	Portb.6
+    Busy        VAR BIT
+    HAM         VAR	WORD
+    ISI         VAR word
+    SIGN        VAR BYTE
+    SIGN_BITI   VAR HAM.Bit11
+    NEGAT_ISI   CON 1
+    TEMP        VAR word
+    Float       VAR WORD
  
  
- 
- 
+   pause 300
  ;*************************************************************
  
  
