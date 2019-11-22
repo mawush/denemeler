@@ -46,7 +46,6 @@
  akis:
     gosub sensor
     gosub goster
-
     goto akis
 sensor:
     OWOUT   Comm_Pin1, 1, [$CC, $44]    ' ISI deðerini oku
