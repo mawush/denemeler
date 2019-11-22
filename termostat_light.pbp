@@ -18,7 +18,7 @@
     trisb=      %00111001
     cs          var portb.1
     clk         var portb.2
-    ver         var portb.3
+    veri        var portb.3
     set         var portb.0
     up          var portb.4
     down        var portb.5
@@ -31,15 +31,60 @@
     NEGAT_ISI   CON 1
     TEMP        VAR word
     Float       VAR WORD
- 
+    derece var byte
+    dereceon var byte
+    onda var byte
+    birler var byte
+    onlar var byte
+    isi_1 var byte
+    isi_2 var byte
+    isi_3 var byte
  
    pause 300
  ;*************************************************************
- 
- 
- 
- 
  gosub init
+ akis:
+    gosub sensor
+    gosub goster
+
+    goto akis
+sensor:
+    OWOUT   Comm_Pin1, 1, [$CC, $44]    ' ISI deðerini oku
+Bekle1:
+    OWIN    Comm_Pin1, 4, [Busy]        ' Busy deðerini oku
+    IF      Busy = 0 THEN Bekle1        ' hala meþgulmü? , evet ise goto Bekle..!
+    OWOUT   Comm_Pin1, 1, [$CC, $BE]    ' scratchpad memory oku
+    OWIN    Comm_Pin1, 2, [HAM.Lowbyte, HAM.Highbyte]' Ýki byte oku ve okumayý bitir.
+    GOto   Hesapla1
+Hesapla1:                               ' Ham deðerden Santigrat derece hesabý
+     Sign  = "+"
+     IF SIGN_BITI = NEGAT_ISI THEN
+       Sign   = "-"  
+       HAM=~HAM+2
+    ENDIF
+    ISI=HAM*10/16
+    FLOAT = ISI//10
+    ISI=ISI/10
+return
+
+goster:
+    onlar= derece dig 1
+    birler= derece dig 0
+    onda=dereceon dig 0
+    lookup birler,[$80,$81,$82,$83,$84,$85,$86,$87,$88,$89],birler
+    low cs
+    pauseus 100
+    SHIFTOUT veri, clk,1, [$01,onlar] 
+    PULSOUT cs,2  
+    SHIFTOUT veri, clk,1, [$02,birler] 
+    PULSOUT cs,2
+    SHIFTOUT veri, clk,1, [$03,onda] 
+    PULSOUT cs,2
+    pauseus 100
+    high cs
+return
+
+
 
 
 
@@ -47,19 +92,19 @@
 init:
     low cs
     pauseus 100
-    SHIFTOUT veri, clk,1, [$0c,$01]   ;displayler açýk
+    SHIFTOUT veri, clk,1, [$0c,$01]      ;displayler açýk
     PULSOUT cs,2
     pauseus 100
-    SHIFTOUT veri, clk,1, [$09,$ff]   ;display decoder modu ( sadece sayý göndermek yeterli kendi yazar)
+    SHIFTOUT veri, clk,1, [$09,$ff]      ;display decoder modu ( sadece sayý göndermek yeterli kendi yazar)
     PULSOUT cs,2 
     pauseus 100
-    SHIFTOUT veri, clk,1, [$0a,$09]   ;display tarama/parlaklýk
+    SHIFTOUT veri, clk,1, [$0a,$09]      ;display tarama/parlaklýk
     PULSOUT cs,2 
     pauseus 100
-    SHIFTOUT veri, clk,1, [$0b,$05] ;display sayýsý
+    SHIFTOUT veri, clk,1, [$0b,$05]      ;display sayýsý
     PULSOUT cs,2
     pauseus 100
-    SHIFTOUT veri, clk,1, [$0f,$00]   ;display test modu 0 kapalý 1 açýk
+    SHIFTOUT veri, clk,1, [$0f,$00]      ;display test modu 0 kapalý 1 açýk
     PULSOUT cs,2 
     pauseus 100
     high cs
